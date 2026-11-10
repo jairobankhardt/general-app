@@ -1,0 +1,6 @@
+---
+description: Regras do projeto General
+alwaysApply: true
+---
+
+O REGRAS.md é a fonte da verdade. Nunca coloque valores de pontuação fixos no código. Regras do jogo ficam na camada de domínio, sem dependência de Android.
