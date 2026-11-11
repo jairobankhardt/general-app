@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.nimbus.generalapp.domain.rules.QuadraTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-11T03:03:47.825Z" hostname="JBANKHARDT" time="0.001">
+  <properties/>
+  <testcase name="trincaComParNaoEQuadra" classname="com.nimbus.generalapp.domain.rules.QuadraTest" time="0.001"/>
+  <testcase name="quatro4EUm2FormamQuadraValidaCom40NormalE45DeMao" classname="com.nimbus.generalapp.domain.rules.QuadraTest" time="0.0"/>
+  <testcase name="cincoDadosIguaisNaoValemComoQuadra" classname="com.nimbus.generalapp.domain.rules.QuadraTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
