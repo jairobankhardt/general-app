@@ -55,9 +55,3 @@ fun avaliarCombinacao(dados: List<Int>, perfil: PerfilDeRegras): AvaliacaoCombin
         ehGeneral = ehGeneral,
     )
 }
-
-fun valorFaceGeneral(dados: List<Int>): Int {
-    require(dados.size == 5)
-    require(dados.toSet().size == 1) { "Não é General" }
-    return dados.first()
-}

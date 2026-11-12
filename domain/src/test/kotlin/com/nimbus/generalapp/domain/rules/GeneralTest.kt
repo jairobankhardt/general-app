@@ -20,14 +20,46 @@ class GeneralTest {
     }
 
     @Test
-    fun generalDeMaoComCasaLivreEncerraComVitoriaDoJogador() {
+    fun generalDeMaoComCasaLivreEncerraComVitoriaDoJogadorERegistra1000() {
         var partida = Partida.iniciar(listOf("ana", "bob"), perfil)
         partida = partida.marcar(Casa.GENERAL, TipoMarcacao.DE_MAO)
 
         assertEquals(StatusPartida.FINALIZADA, partida.status)
         assertEquals(listOf("ana"), partida.vencedores)
         assertTrue(partida.terminouPorGeneralDeMao)
-        assertEquals(50, partida.cartela("ana").marcacao(Casa.GENERAL)?.pontos)
+        assertEquals(1000, partida.cartela("ana").marcacao(Casa.GENERAL)?.pontos)
+    }
+
+    @Test
+    fun generalDeMaoPontua1000ComGeneralDeMaoVenceNaHoraFalse() {
+        val regras = perfil.copy(generalDeMaoVenceNaHora = false)
+        var partida = Partida.iniciar(listOf("ana", "bob"), regras)
+        partida = partida.marcar(Casa.GENERAL, TipoMarcacao.DE_MAO)
+
+        assertEquals(StatusPartida.EM_ANDAMENTO, partida.status)
+        assertFalse(partida.terminouPorGeneralDeMao)
+        assertTrue(partida.vencedores.isEmpty())
+        assertEquals(1000, partida.cartela("ana").marcacao(Casa.GENERAL)?.pontos)
+        assertEquals(
+            1000,
+            calcularPontos(Casa.GENERAL, TipoMarcacao.DE_MAO, regras),
+        )
+    }
+
+    @Test
+    fun generalDeMaoPontua1000ComBonusDeMaoExisteFalse() {
+        val regras = perfil.copy(bonusDeMaoExiste = false)
+        assertEquals(
+            1000,
+            calcularPontos(Casa.GENERAL, TipoMarcacao.DE_MAO, regras),
+        )
+
+        var partida = Partida.iniciar(listOf("ana", "bob"), regras)
+        partida = partida.marcar(Casa.GENERAL, TipoMarcacao.DE_MAO)
+
+        assertEquals(StatusPartida.FINALIZADA, partida.status)
+        assertTrue(partida.terminouPorGeneralDeMao)
+        assertEquals(1000, partida.cartela("ana").marcacao(Casa.GENERAL)?.pontos)
     }
 
     @Test

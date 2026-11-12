@@ -12,7 +12,6 @@ class PontuacaoCasasNumericasTest {
 
     @Test
     fun tresDados4NaCasaDo4Valem12() {
-        assertEquals(12, pontosCasaNumerica(4, 3))
         assertEquals(
             12,
             calcularPontos(Casa.QUATRO, TipoMarcacao.NORMAL, perfil, quantidade = 3),
@@ -21,7 +20,6 @@ class PontuacaoCasasNumericasTest {
 
     @Test
     fun zeroDadosIguaisAoNumeroValem0ENaoSaoQueimada() {
-        assertEquals(0, pontosCasaNumerica(4, 0))
         assertEquals(
             0,
             calcularPontos(Casa.QUATRO, TipoMarcacao.NORMAL, perfil, quantidade = 0),
@@ -30,7 +28,6 @@ class PontuacaoCasasNumericasTest {
 
     @Test
     fun cincoDados6NaCasaDo6Valem30() {
-        assertEquals(30, pontosCasaNumerica(6, 5))
         assertEquals(
             30,
             calcularPontos(Casa.SEIS, TipoMarcacao.NORMAL, perfil, quantidade = 5),

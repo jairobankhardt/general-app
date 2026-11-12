@@ -32,7 +32,7 @@ Aplicativo Android para **marcar pontos do jogo de dados General**. Os dados sã
 | **Full**             | Trinca + par de números **diferentes** (ex.: 3-3-3-5-5)                 | 30             | 35                   |
 | **Seguida**          | 1-2-3-4-5, 2-3-4-5-6 **ou 3-4-5-6-1**                                   | 25             | 30                   |
 | **Quadra**           | Quatro dados iguais + **um diferente** (ex.: 4-4-4-4-2)                 | 40             | 45                   |
-| **General**          | Cinco dados iguais                                                      | 50             | **Vitória imediata** |
+| **General**          | Cinco dados iguais                                                      | 50             | **Vitória imediata (registra 1000 pontos)** |
 
 ### 2.3 Regras especiais
 
@@ -47,6 +47,9 @@ Aplicativo Android para **marcar pontos do jogo de dados General**. Os dados sã
 ### 2.4 Detalhes de interpretação
 
 - "De mão" é uma **declaração do jogador na hora da marcação**, pois o app não vê os dados. A interface oferece "Normal", "De mão" ou "Queimar".
+- O app **confia nos jogadores**: a marcação **não valida os 5 dados**.
+- "De mão" **não se aplica a casas numéricas**.
+- Sem bônus de mão, "de mão" usa os **valores normais** em Full, Seguida e Quadra.
 - General de mão só é oferecido na interface se a casa do General do jogador estiver livre.
 - Ao marcar General de mão, o jogo encerra imediatamente, **mesmo que outros jogadores ainda tenham casas livres**. O vencedor é quem declarou o General de mão.
 
@@ -67,9 +70,9 @@ As regras da seção 2 são o **perfil padrão**, chamado **"Regras da casa"**. 
 | Valor normal da Quadra                                               | 40     |
 | Valor de mão da Quadra                                               | 45     |
 | Valor normal do General                                              | 50     |
+| Valor de mão do General = 1000 (vale com ou sem vitória imediata, independente do bônus de mão) | 1000   |
 | Seguida aceita 3-4-5-6-1                                             | sim    |
 | General de mão vence na hora                                         | sim    |
-| General de mão exige casa do General livre                           | sim    |
 | Cinco dados iguais valem como Full                                   | não    |
 | Cinco dados iguais valem como Quadra                                 | não    |
 | Cinco dados iguais podem ir para casa numérica (com General ocupado) | sim    |

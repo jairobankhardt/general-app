@@ -27,10 +27,24 @@ class BonusDeMaoTest {
     }
 
     @Test
-    fun casaNumericaDeMaoNaoRecebeBonus() {
-        val normal = calcularPontos(Casa.TRES, TipoMarcacao.NORMAL, perfil, quantidade = 4)
-        val deMao = calcularPontos(Casa.TRES, TipoMarcacao.DE_MAO, perfil, quantidade = 4)
-        assertEquals(12, normal)
-        assertEquals(12, deMao)
+    fun deMaoEmFullSeguidaEQuadraUsaValoresNormaisQuandoBonusDeMaoExisteFalse() {
+        val regras = perfil.copy(bonusDeMaoExiste = false)
+        assertEquals(
+            regras.valorFullNormal,
+            calcularPontos(Casa.FULL, TipoMarcacao.DE_MAO, regras),
+        )
+        assertEquals(
+            regras.valorSeguidaNormal,
+            calcularPontos(Casa.SEGUIDA, TipoMarcacao.DE_MAO, regras),
+        )
+        assertEquals(
+            regras.valorQuadraNormal,
+            calcularPontos(Casa.QUADRA, TipoMarcacao.DE_MAO, regras),
+        )
+    }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun deMaoEmCasaNumericaERejeitado() {
+        calcularPontos(Casa.TRES, TipoMarcacao.DE_MAO, perfil, quantidade = 4)
     }
 }

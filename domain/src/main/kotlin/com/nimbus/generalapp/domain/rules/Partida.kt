@@ -77,13 +77,6 @@ data class Partida(
         val cartelaAtual = cartela(jogadorId)
         require(cartelaAtual.estaLivre(casa)) { "Casa $casa já está preenchida" }
 
-        if (tipo == TipoMarcacao.DE_MAO && casa == Casa.GENERAL) {
-            val exigeLivre = regras.generalDeMaoExigeCasaGeneralLivre
-            require(!exigeLivre || cartelaAtual.estaLivre(Casa.GENERAL)) {
-                "General de mão exige casa do General livre"
-            }
-        }
-
         val pontos = calcularPontos(casa, tipo, regras)
         val marcacao = Marcacao(casa, tipo, pontos)
         return aplicarMarcacao(jogadorId, marcacao)
@@ -92,7 +85,6 @@ data class Partida(
     fun marcarNumerica(
         casa: Casa,
         quantidade: Int,
-        tipo: TipoMarcacao = TipoMarcacao.NORMAL,
         jogadorId: String = jogadorDaVez,
     ): Partida {
         require(status == StatusPartida.EM_ANDAMENTO) { "Partida já finalizada" }
@@ -103,8 +95,8 @@ data class Partida(
         val cartelaAtual = cartela(jogadorId)
         require(cartelaAtual.estaLivre(casa)) { "Casa $casa já está preenchida" }
 
-        val pontos = calcularPontos(casa, tipo, regras, quantidade)
-        val marcacao = Marcacao(casa, tipo, pontos)
+        val pontos = calcularPontos(casa, TipoMarcacao.NORMAL, regras, quantidade)
+        val marcacao = Marcacao(casa, TipoMarcacao.NORMAL, pontos)
         return aplicarMarcacao(jogadorId, marcacao)
     }
 
@@ -155,12 +147,11 @@ data class Partida(
             historico = historico + entrada,
         )
 
+        // General de mão só é marcável com a casa livre; vitória imediata é regra fixa nesse caso.
         val generalDeMao =
             marcacao.casa == Casa.GENERAL &&
                 marcacao.tipo == TipoMarcacao.DE_MAO &&
-                regras.generalDeMaoVenceNaHora &&
-                (!regras.generalDeMaoExigeCasaGeneralLivre ||
-                    cartelas.getValue(jogadorId).estaLivre(Casa.GENERAL))
+                regras.generalDeMaoVenceNaHora
 
         if (generalDeMao) {
             return aposHistorico.copy(
