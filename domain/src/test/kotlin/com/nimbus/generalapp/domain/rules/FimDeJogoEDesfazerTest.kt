@@ -45,27 +45,27 @@ class FimDeJogoEDesfazerTest {
         partida = partida.marcar(Casa.GENERAL, TipoMarcacao.NORMAL)
 
         assertEquals(StatusPartida.FINALIZADA, partida.status)
-        assertEquals(listOf("ana", "bob"), partida.vencedores)
+        assertEquals(listOf(ANA, BOB), partida.vencedores)
     }
 
     @Test
     fun desfazerRemoveUltimaMarcacaoERestauraJogadorDaVez() {
-        var partida = Partida.iniciar(listOf("ana", "bob"), perfil)
-        assertEquals("ana", partida.jogadorDaVez)
+        var partida = Partida.iniciar(listOf(ANA, BOB), perfil)
+        assertEquals(ANA, partida.jogadorDaVez)
 
         partida = partida.marcar(Casa.FULL, TipoMarcacao.NORMAL)
-        assertEquals("bob", partida.jogadorDaVez)
-        assertEquals(30, partida.cartela("ana").total())
+        assertEquals(BOB, partida.jogadorDaVez)
+        assertEquals(30, partida.cartela(ANA).total())
 
         partida = partida.desfazer()
-        assertEquals("ana", partida.jogadorDaVez)
-        assertTrue(partida.cartela("ana").estaLivre(Casa.FULL))
-        assertEquals(0, partida.cartela("ana").total())
+        assertEquals(ANA, partida.jogadorDaVez)
+        assertTrue(partida.cartela(ANA).estaLivre(Casa.FULL))
+        assertEquals(0, partida.cartela(ANA).total())
     }
 
     @Test
     fun desfazerMarcacaoDeGeneralDeMaoReabreAPartida() {
-        var partida = Partida.iniciar(listOf("ana", "bob"), perfil)
+        var partida = Partida.iniciar(listOf(ANA, BOB), perfil)
         partida = partida.marcar(Casa.GENERAL, TipoMarcacao.DE_MAO)
 
         assertEquals(StatusPartida.FINALIZADA, partida.status)
@@ -76,8 +76,8 @@ class FimDeJogoEDesfazerTest {
         assertEquals(StatusPartida.EM_ANDAMENTO, partida.status)
         assertTrue(partida.vencedores.isEmpty())
         assertFalse(partida.terminouPorGeneralDeMao)
-        assertEquals("ana", partida.jogadorDaVez)
-        assertTrue(partida.cartela("ana").estaLivre(Casa.GENERAL))
+        assertEquals(ANA, partida.jogadorDaVez)
+        assertTrue(partida.cartela(ANA).estaLivre(Casa.GENERAL))
     }
 
     /**
@@ -106,10 +106,10 @@ class FimDeJogoEDesfazerTest {
 
         return Partida(
             regras = perfil,
-            ordemJogadores = listOf("ana", "bob"),
+            ordemJogadores = listOf(ANA, BOB),
             cartelas = mapOf(
-                "ana" to cartelaCom(pontosAna, faltaAna),
-                "bob" to cartelaCom(pontosBob, faltaBob),
+                ANA to cartelaCom(pontosAna, faltaAna),
+                BOB to cartelaCom(pontosBob, faltaBob),
             ),
             indiceJogadorDaVez = 0,
         )

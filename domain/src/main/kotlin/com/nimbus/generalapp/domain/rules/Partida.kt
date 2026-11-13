@@ -2,31 +2,33 @@ package com.nimbus.generalapp.domain.rules
 
 import com.nimbus.generalapp.domain.model.Casa
 import com.nimbus.generalapp.domain.model.Cartela
+import com.nimbus.generalapp.domain.model.JogadorId
 import com.nimbus.generalapp.domain.model.Marcacao
 import com.nimbus.generalapp.domain.model.PerfilDeRegras
 import com.nimbus.generalapp.domain.model.StatusPartida
 import com.nimbus.generalapp.domain.model.TipoMarcacao
 
 data class EntradaHistorico(
-    val jogadorId: String,
+    val jogadorId: JogadorId,
     val marcacao: Marcacao,
     val indiceJogadorDaVezAntes: Int,
     val statusAntes: StatusPartida,
-    val vencedoresAntes: List<String>,
+    val vencedoresAntes: List<JogadorId>,
     val terminouPorGeneralDeMaoAntes: Boolean,
 )
 
 /**
  * Estado imutável de uma partida. O perfil é um snapshot das regras usadas.
+ * Jogadores são referenciados só por [JogadorId].
  */
 data class Partida(
     val regras: PerfilDeRegras,
-    val ordemJogadores: List<String>,
-    val cartelas: Map<String, Cartela>,
+    val ordemJogadores: List<JogadorId>,
+    val cartelas: Map<JogadorId, Cartela>,
     val indiceJogadorDaVez: Int = 0,
     val historico: List<EntradaHistorico> = emptyList(),
     val status: StatusPartida = StatusPartida.EM_ANDAMENTO,
-    val vencedores: List<String> = emptyList(),
+    val vencedores: List<JogadorId> = emptyList(),
     val terminouPorGeneralDeMao: Boolean = false,
 ) {
     init {
@@ -40,14 +42,14 @@ data class Partida(
         require(indiceJogadorDaVez in ordemJogadores.indices)
     }
 
-    val jogadorDaVez: String get() = ordemJogadores[indiceJogadorDaVez]
+    val jogadorDaVez: JogadorId get() = ordemJogadores[indiceJogadorDaVez]
 
-    fun cartela(jogadorId: String): Cartela =
+    fun cartela(jogadorId: JogadorId): Cartela =
         cartelas[jogadorId] ?: error("Jogador desconhecido: $jogadorId")
 
     companion object {
         fun iniciar(
-            jogadores: List<String>,
+            jogadores: List<JogadorId>,
             regras: PerfilDeRegras = PerfilDeRegras.regrasDaCasa(),
         ): Partida {
             require(jogadores.size >= 2)
@@ -66,7 +68,7 @@ data class Partida(
     fun marcar(
         casa: Casa,
         tipo: TipoMarcacao,
-        jogadorId: String = jogadorDaVez,
+        jogadorId: JogadorId = jogadorDaVez,
     ): Partida {
         require(status == StatusPartida.EM_ANDAMENTO) { "Partida já finalizada" }
         require(jogadorId == jogadorDaVez) { "Não é a vez de $jogadorId" }
@@ -85,7 +87,7 @@ data class Partida(
     fun marcarNumerica(
         casa: Casa,
         quantidade: Int,
-        jogadorId: String = jogadorDaVez,
+        jogadorId: JogadorId = jogadorDaVez,
     ): Partida {
         require(status == StatusPartida.EM_ANDAMENTO) { "Partida já finalizada" }
         require(jogadorId == jogadorDaVez) { "Não é a vez de $jogadorId" }
@@ -100,7 +102,7 @@ data class Partida(
         return aplicarMarcacao(jogadorId, marcacao)
     }
 
-    fun queimar(casa: Casa, jogadorId: String = jogadorDaVez): Partida =
+    fun queimar(casa: Casa, jogadorId: JogadorId = jogadorDaVez): Partida =
         marcar(casa, TipoMarcacao.QUEIMADA, jogadorId)
 
     /**
@@ -109,7 +111,7 @@ data class Partida(
      */
     fun podeMarcarCincoIguaisNaCasaNumerica(
         face: Int,
-        jogadorId: String = jogadorDaVez,
+        jogadorId: JogadorId = jogadorDaVez,
     ): Boolean {
         if (!regras.cincoIguaisPodemIrParaCasaNumerica) return false
         val cartelaAtual = cartela(jogadorId)
@@ -132,7 +134,7 @@ data class Partida(
         )
     }
 
-    private fun aplicarMarcacao(jogadorId: String, marcacao: Marcacao): Partida {
+    private fun aplicarMarcacao(jogadorId: JogadorId, marcacao: Marcacao): Partida {
         val entrada = EntradaHistorico(
             jogadorId = jogadorId,
             marcacao = marcacao,
@@ -173,7 +175,7 @@ data class Partida(
         return aposHistorico.copy(indiceJogadorDaVez = proximo)
     }
 
-    private fun determinarVencedores(cartelasFinais: Map<String, Cartela>): List<String> {
+    private fun determinarVencedores(cartelasFinais: Map<JogadorId, Cartela>): List<JogadorId> {
         val totais = ordemJogadores.associateWith { cartelasFinais.getValue(it).total() }
         val maior = totais.values.maxOrNull() ?: return emptyList()
         return ordemJogadores.filter { totais.getValue(it) == maior }

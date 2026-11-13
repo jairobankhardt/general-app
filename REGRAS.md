@@ -93,10 +93,10 @@ As regras da seção 2 são o **perfil padrão**, chamado **"Regras da casa"**. 
 
 ### 4.1 Cadastro
 
-- Jogador é entidade permanente com: `id`, `nome` (editável), `nomeNormalizado`, `cor`, `arquivado`.
-- Partidas e marcações referenciam o jogador **pelo `id`, nunca pelo nome**.
+- Jogador é entidade permanente com: `id` (`JogadorId`, valor `String`/UUID gerado **fora** do domínio), `nome` (editável), `nomeNormalizado`, `cor`, `arquivado`, `convidado`.
+- Partidas e marcações referenciam o jogador **pelo `JogadorId`, nunca pelo nome**.
 - Ao iniciar uma partida, escolhem-se jogadores entre os cadastrados, definindo a **ordem de jogo** (reordenável). Mínimo de 2 jogadores.
-- **Convidado:** jogador criado na hora, com opção "salvar como jogador fixo".
+- **Convidado:** jogador criado na hora, com opção "salvar como jogador fixo". Convidado também obedece ao nome único. `tornarFixo` remove a marca de convidado.
 - **Excluir jogador = arquivar.** Jogadores arquivados somem das listas de seleção, mas o histórico permanece íntegro. Pode-se restaurar.
 
 ### 4.2 Nome único
@@ -156,7 +156,8 @@ Em caso de empate no total, a partida termina com **empate declarado**, listando
 
 ```
 Jogador
-  id, nome, nomeNormalizado (UNIQUE), cor, arquivado
+  id (JogadorId: valor String, UUID gerado fora do domínio),
+  nome, nomeNormalizado (UNIQUE), cor, arquivado, convidado
 
 PerfilDeRegras
   id, nome, padrao (bool), valores e opções (seção 3.1)
@@ -165,10 +166,10 @@ Partida
   id, dataInicio, dataFim?, status, regrasSnapshot, vencedores?, terminouPorGeneralDeMao
 
 ParticipantePartida
-  partidaId, jogadorId, ordem
+  partidaId, jogadorId (JogadorId), ordem
 
 Marcacao
-  id, partidaId, jogadorId, casa, tipo (NORMAL | DE_MAO | QUEIMADA), pontos, ordemGlobal
+  id, partidaId, jogadorId (JogadorId), casa, tipo (NORMAL | DE_MAO | QUEIMADA), pontos, ordemGlobal
 ```
 
 - Casas: `UM, DOIS, TRES, QUATRO, CINCO, SEIS, FULL, SEGUIDA, QUADRA, GENERAL`.
@@ -231,7 +232,7 @@ ui/
 - General de mão registra 1000 pontos quando vence na hora.
 - General de mão registra 1000 pontos quando `generalDeMaoVenceNaHora=false`.
 - General de mão registra 1000 pontos mesmo com `bonusDeMaoExiste=false`.
-- General de mão com casa do General ocupada → **não** vence; pode marcar na casa numérica livre correspondente.
+- Cinco dados iguais com a casa do General ocupada → não vence; marca-se na casa numérica livre correspondente como NORMAL.
 - General com casa do General e casa numérica correspondente ocupadas → só é possível queimar outra casa livre.
 
 ### Bônus de mão

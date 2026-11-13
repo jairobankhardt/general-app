@@ -12,10 +12,10 @@ class QueimarTest {
 
     @Test
     fun queimarMarcaZeroEmCasaLivreAQualquerMomento() {
-        var partida = Partida.iniciar(listOf("ana", "bob"))
+        var partida = Partida.iniciar(listOf(ANA, BOB))
         partida = partida.queimar(Casa.SEGUIDA)
 
-        val marcacao = partida.cartela("ana").marcacao(Casa.SEGUIDA)!!
+        val marcacao = partida.cartela(ANA).marcacao(Casa.SEGUIDA)!!
         assertEquals(TipoMarcacao.QUEIMADA, marcacao.tipo)
         assertEquals(0, marcacao.pontos)
     }
@@ -35,7 +35,7 @@ class QueimarTest {
         }
         assertEquals(true, falhou)
 
-        var partida = Partida.iniciar(listOf("ana", "bob"))
+        var partida = Partida.iniciar(listOf(ANA, BOB))
         partida = partida.queimar(Casa.QUADRA)
         // bob joga para devolver a vez a ana
         partida = partida.queimar(Casa.UM)

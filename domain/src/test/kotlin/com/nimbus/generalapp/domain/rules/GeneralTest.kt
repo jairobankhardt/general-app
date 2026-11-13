@@ -21,25 +21,25 @@ class GeneralTest {
 
     @Test
     fun generalDeMaoComCasaLivreEncerraComVitoriaDoJogadorERegistra1000() {
-        var partida = Partida.iniciar(listOf("ana", "bob"), perfil)
+        var partida = Partida.iniciar(listOf(ANA, BOB), perfil)
         partida = partida.marcar(Casa.GENERAL, TipoMarcacao.DE_MAO)
 
         assertEquals(StatusPartida.FINALIZADA, partida.status)
-        assertEquals(listOf("ana"), partida.vencedores)
+        assertEquals(listOf(ANA), partida.vencedores)
         assertTrue(partida.terminouPorGeneralDeMao)
-        assertEquals(1000, partida.cartela("ana").marcacao(Casa.GENERAL)?.pontos)
+        assertEquals(1000, partida.cartela(ANA).marcacao(Casa.GENERAL)?.pontos)
     }
 
     @Test
     fun generalDeMaoPontua1000ComGeneralDeMaoVenceNaHoraFalse() {
         val regras = perfil.copy(generalDeMaoVenceNaHora = false)
-        var partida = Partida.iniciar(listOf("ana", "bob"), regras)
+        var partida = Partida.iniciar(listOf(ANA, BOB), regras)
         partida = partida.marcar(Casa.GENERAL, TipoMarcacao.DE_MAO)
 
         assertEquals(StatusPartida.EM_ANDAMENTO, partida.status)
         assertFalse(partida.terminouPorGeneralDeMao)
         assertTrue(partida.vencedores.isEmpty())
-        assertEquals(1000, partida.cartela("ana").marcacao(Casa.GENERAL)?.pontos)
+        assertEquals(1000, partida.cartela(ANA).marcacao(Casa.GENERAL)?.pontos)
         assertEquals(
             1000,
             calcularPontos(Casa.GENERAL, TipoMarcacao.DE_MAO, regras),
@@ -54,46 +54,46 @@ class GeneralTest {
             calcularPontos(Casa.GENERAL, TipoMarcacao.DE_MAO, regras),
         )
 
-        var partida = Partida.iniciar(listOf("ana", "bob"), regras)
+        var partida = Partida.iniciar(listOf(ANA, BOB), regras)
         partida = partida.marcar(Casa.GENERAL, TipoMarcacao.DE_MAO)
 
         assertEquals(StatusPartida.FINALIZADA, partida.status)
         assertTrue(partida.terminouPorGeneralDeMao)
-        assertEquals(1000, partida.cartela("ana").marcacao(Casa.GENERAL)?.pontos)
+        assertEquals(1000, partida.cartela(ANA).marcacao(Casa.GENERAL)?.pontos)
     }
 
     @Test
     fun generalDeMaoComCasaDoGeneralOcupadaNaoVenceEPodeMarcarCasaNumericaLivre() {
-        var partida = Partida.iniciar(listOf("ana", "bob"), perfil)
+        var partida = Partida.iniciar(listOf(ANA, BOB), perfil)
         // Ana queima o General; Bob joga e devolve a vez
         partida = partida.queimar(Casa.GENERAL)
         partida = partida.queimar(Casa.UM) // bob
 
-        assertFalse(partida.cartela("ana").estaLivre(Casa.GENERAL))
-        assertTrue(partida.podeMarcarCincoIguaisNaCasaNumerica(4, "ana"))
+        assertFalse(partida.cartela(ANA).estaLivre(Casa.GENERAL))
+        assertTrue(partida.podeMarcarCincoIguaisNaCasaNumerica(4, ANA))
 
         partida = partida.marcarNumerica(Casa.QUATRO, quantidade = 5)
 
         assertEquals(StatusPartida.EM_ANDAMENTO, partida.status)
         assertTrue(partida.vencedores.isEmpty())
         assertFalse(partida.terminouPorGeneralDeMao)
-        assertEquals(20, partida.cartela("ana").marcacao(Casa.QUATRO)?.pontos)
+        assertEquals(20, partida.cartela(ANA).marcacao(Casa.QUATRO)?.pontos)
     }
 
     @Test
     fun generalComCasaGeneralECasaNumericaOcupadasSoPermiteQueimarOutraCasaLivre() {
-        var partida = Partida.iniciar(listOf("ana", "bob"), perfil)
+        var partida = Partida.iniciar(listOf(ANA, BOB), perfil)
         partida = partida.queimar(Casa.GENERAL) // ana
         partida = partida.queimar(Casa.UM) // bob
         partida = partida.marcarNumerica(Casa.QUATRO, quantidade = 2) // ana
         partida = partida.queimar(Casa.DOIS) // bob
 
-        assertFalse(partida.podeMarcarCincoIguaisNaCasaNumerica(4, "ana"))
-        assertTrue(partida.cartela("ana").estaLivre(Casa.FULL))
+        assertFalse(partida.podeMarcarCincoIguaisNaCasaNumerica(4, ANA))
+        assertTrue(partida.cartela(ANA).estaLivre(Casa.FULL))
 
         partida = partida.queimar(Casa.FULL)
 
-        assertEquals(0, partida.cartela("ana").marcacao(Casa.FULL)?.pontos)
-        assertEquals(TipoMarcacao.QUEIMADA, partida.cartela("ana").marcacao(Casa.FULL)?.tipo)
+        assertEquals(0, partida.cartela(ANA).marcacao(Casa.FULL)?.pontos)
+        assertEquals(TipoMarcacao.QUEIMADA, partida.cartela(ANA).marcacao(Casa.FULL)?.tipo)
     }
 }
