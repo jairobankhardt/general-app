@@ -28,7 +28,7 @@ Aplicativo Android para **marcar pontos do jogo de dados General**. Os dados sã
 
 | Casa                 | Combinação                                                              | Normal         | De mão (1ª jogada)   |
 | -------------------- | ----------------------------------------------------------------------- | -------------- | -------------------- |
-| **1, 2, 3, 4, 5, 6** | Soma apenas dos dados com aquele número (ex.: três 4 = 12 na casa do 4) | soma dos dados | sem bônus            |
+| **1, 2, 3, 4, 5, 6** | Soma apenas dos dados com aquele número (ex.: três 4 = 12 na casa do 4) | soma dos dados | não se aplica        |
 | **Full**             | Trinca + par de números **diferentes** (ex.: 3-3-3-5-5)                 | 30             | 35                   |
 | **Seguida**          | 1-2-3-4-5, 2-3-4-5-6 **ou 3-4-5-6-1**                                   | 25             | 30                   |
 | **Quadra**           | Quatro dados iguais + **um diferente** (ex.: 4-4-4-4-2)                 | 40             | 45                   |
@@ -37,8 +37,8 @@ Aplicativo Android para **marcar pontos do jogo de dados General**. Os dados sã
 ### 2.3 Regras especiais
 
 1. **Bônus de mão:** Full, Seguida e Quadra feitas já na **primeira jogada** valem +5 pontos (valor "de mão" da tabela).
-2. **Casas numéricas** não têm bônus de mão.
-3. **General de mão:** cinco dados iguais na 1ª jogada **encerram o jogo com vitória imediata** do jogador, **somente se a casa do General dele estiver livre**.
+2. **Casas numéricas** não aceitam "de mão".
+3. **General de mão:** cinco dados iguais na 1ª jogada **encerram o jogo com vitória imediata** do jogador, **somente se a casa do General dele estiver livre**. O General de mão registra 1000 pontos.
 4. **Cinco dados iguais não valem como Full nem como Quadra.**
 5. **General com a casa do General já preenchida (ou queimada):** o jogador pode marcar na **casa numérica correspondente** (ex.: cinco 4 = 20 na casa do 4), **desde que ela esteja livre**. Se não estiver, resta queimar uma casa livre. Não há vitória imediata nesse caso.
 6. **Queimar** é permitido a qualquer momento, tanto quando não há opção quanto por escolha do jogador.
@@ -70,13 +70,15 @@ As regras da seção 2 são o **perfil padrão**, chamado **"Regras da casa"**. 
 | Valor normal da Quadra                                               | 40     |
 | Valor de mão da Quadra                                               | 45     |
 | Valor normal do General                                              | 50     |
-| Valor de mão do General = 1000 (vale com ou sem vitória imediata, independente do bônus de mão) | 1000   |
+| Valor de mão do General                                              | 1000   |
 | Seguida aceita 3-4-5-6-1                                             | sim    |
 | General de mão vence na hora                                         | sim    |
 | Cinco dados iguais valem como Full                                   | não    |
 | Cinco dados iguais valem como Quadra                                 | não    |
 | Cinco dados iguais podem ir para casa numérica (com General ocupado) | sim    |
 | Bônus de mão existe                                                  | sim    |
+
+> Valor de mão do General: vale com ou sem vitória imediata, independente do bônus de mão.
 
 ### 3.2 Regras sobre perfis
 
@@ -226,13 +228,16 @@ ui/
 
 - 5-5-5-5-5 normal → 50.
 - General de mão com casa livre → **fim imediato de jogo, vitória do jogador**.
+- General de mão registra 1000 pontos quando vence na hora.
+- General de mão registra 1000 pontos quando `generalDeMaoVenceNaHora=false`.
+- General de mão registra 1000 pontos mesmo com `bonusDeMaoExiste=false`.
 - General de mão com casa do General ocupada → **não** vence; pode marcar na casa numérica livre correspondente.
 - General com casa do General e casa numérica correspondente ocupadas → só é possível queimar outra casa livre.
 
 ### Bônus de mão
 
 - Full, Seguida e Quadra de mão valem +5.
-- Casa numérica "de mão" **não** recebe bônus.
+- "De mão" em casa numérica é rejeitado.
 
 ### Queimar
 
